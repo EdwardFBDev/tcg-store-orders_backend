@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Product</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<h1>Create Product</h1>
+<!--
+    th:object="${product}"  -> este formulario trabajara con obj product
+    th:field="*{name}"      -> vincula el campo html con la propiedad name del obj product
+    method="post"           -> cuando se envia el formulario, va a la ruta POST/ products
+-->
+<div class="form-container">
+    <form th:action="@{/products}" th:object="${product}" method="post">
+
+        <div class="form-group">
+            <label for="name">Product Name</label>
+            <input type="text" id="name" th:field="*{name}">
+            <!--
+                th:errors="*{name}  -> se pegunta si ese campo tiene error
+                th:errors="*{name}  -> Muestra un mensaje que viene de model de valid
+
+                ...asi con los espacios de validacion segun model/Product
+            -->
+            <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="cardGame">Card Game</label>
+            <select id="cardGame" th:field="*{cardGame}">
+                <option value="">Select a game</option>
+                <option th:each="game : ${cardGames}"
+                        th:value="${game}"
+                        th:text="${game}">
+                </option>
+            </select>
+            <div class="error-message" th:if="${#fields.hasErrors('cardGame')}" th:errors="*{cardGame}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="category">Category</label>
+            <select id="category" th:field="*{category}">
+                <option value="">Select a category</option>
+                <option th:each="category : ${categories}"
+                        th:value="${category}"
+                        th:text="${category}">
+                </option>
+            </select>
+            <div class="error-message" th:if="${#fields.hasErrors('category')}" th:errors="*{category}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="price">Price</label>
+            <input type="number" id="price" th:field="*{price}" step="0.01" min="0">
+            <div class="error-message" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="stock">Stock</label>
+            <input type="number" id="stock" th:field="*{stock}" min="0">
+            <div class="error-message" th:if="${#fields.hasErrors('stock')}" th:errors="*{stock}"></div>
+        </div>
+
+        <div class="form-group">
+            <label for="active">Status</label>
+            <select id="active" th:field="*{active}">
+                <option th:value="true">Active</option>
+                <option th:value="false">Inactive</option>
+            </select>
+        </div>
+
+        <button type="submit">Save Product</button>
+    </form>
+</div>
+
+</body>
+</html>
