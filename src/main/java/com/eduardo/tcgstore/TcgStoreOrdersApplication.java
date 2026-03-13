@@ -6,8 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class TcgStoreOrdersApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(TcgStoreOrdersApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(TcgStoreOrdersApplication.class, args);
+    }
 
 }
