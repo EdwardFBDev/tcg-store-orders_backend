@@ -10,13 +10,15 @@ import java.math.BigDecimal;
 @ToString
 
 public class OrderItem {
+
     private Product product;
     private int quantity;
+
     public BigDecimal getSubtotal(){
+
         if (product == null || product.getPrice() == null){
             return BigDecimal.ZERO;
         }
-        return product.getPrice()
-                .multiply(BigDecimal.valueOf(quantity));
+        return product.getPrice().multiply(BigDecimal.valueOf(quantity));
     }
 }

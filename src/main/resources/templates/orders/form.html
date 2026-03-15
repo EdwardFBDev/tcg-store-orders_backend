@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Create Order</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+<div th:replace="~{fragments/layout :: navbar}"></div>
+
+<h1>Create Order</h1>
+
+<div class="form-container">
+  <form th:action="@{/orders}" method="post">
+
+    <div class="form-group">
+      <label for="customerId">Customer</label>
+      <select id="customerId" name="customerId" required>
+        <option value="">Select a customer</option>
+        <option th:each="customer : ${customers}"
+                th:value="${customer.id}"
+                th:text="${customer.name}">
+        </option>
+      </select>
+    </div>
+
+    <button type="submit">Create Order</button>
+  </form>
+</div>
+
+</body>
+</html>

@@ -1,5 +1,7 @@
 package com.eduardo.tcgstore.model;
+
 import com.eduardo.tcgstore.enums.OrderStatus;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-
 public class Order {
 
     private Long id;
