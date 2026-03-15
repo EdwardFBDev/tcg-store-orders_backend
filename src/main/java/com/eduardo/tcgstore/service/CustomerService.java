@@ -13,12 +13,10 @@ public class CustomerService {
     private final  CustomerRepository customerRepository;
 
     public CustomerService(CustomerRepository customerRepository) {
-
         this.customerRepository = customerRepository;
     }
 
     public Customer createCustomer(Customer customer){
-
         if (customer.getName()==null || customer.getName().isBlank()){
             throw new IllegalArgumentException("Customer name is required");
         }
@@ -26,18 +24,11 @@ public class CustomerService {
     }
 
     public List<Customer> getAllCustomers() {
-
         return customerRepository.findAll();
     }
 
     public Customer getCustomerById(Long id){
-
         return customerRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Customer not found"));
-    }
-
-    public void deleteCustomer(Long id){
-
-        customerRepository.deleteById(id);
     }
 }
