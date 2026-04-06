@@ -1,14 +1,14 @@
 package com.eduardo.tcgstore.model;
 
-import com.eduardo.tcgstore.enums.CardGame;
-import com.eduardo.tcgstore.enums.ProductCategory;
-import lombok.*;
-
 import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
-@ToString
 @NoArgsConstructor
 @AllArgsConstructor
 public class Product {
@@ -18,6 +18,29 @@ public class Product {
     private CardGame cardGame;
     private ProductCategory category;
     private BigDecimal price;
-    private int stock;
-    private boolean active;
+    private Integer stock;
+    private ProductStatus status;
+
+
+    public enum ProductCategory {
+        POKEMON,
+        MAGIC,
+        LORCANA,
+        ONE_PIECE
+    }
+
+    public enum ProductCategory {
+        BOOSTER_PACK,
+        ELITE_TRAINER_BOX,
+        SPECIAL_COLLECTION,
+        PRECONSTRUCTED_DECK,
+        SLEEVES,
+        DECK_BOX,
+        BINDER
+    }
+
+    public enum ProductStatus {
+        ACTIVE,
+        INACTIVE
+    }
 }

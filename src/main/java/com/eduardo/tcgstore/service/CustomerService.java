@@ -1,8 +1,8 @@
 package com.eduardo.tcgstore.service;
 
+import com.eduardo.tcgstore.exception.BusinessException;
 import com.eduardo.tcgstore.model.Customer;
 import com.eduardo.tcgstore.repository.CustomerRepository;
-
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +17,17 @@ public class CustomerService {
     }
 
     public Customer createCustomer(Customer customer){
+
+        if (customer == null){
+            throw new BusinessException("Customer data is required");
+        }
+
         if (customer.getName()==null || customer.getName().isBlank()){
-            throw new IllegalArgumentException("Customer name is required");
+            throw new BusinessException("Customer name is required");
+        }
+
+        if (customer.getEmail()==null || customer.getEmail().isBlank()){
+            throw new BusinessException("Customer email is required");
         }
         return customerRepository.save(customer);
     }
@@ -29,6 +38,6 @@ public class CustomerService {
 
     public Customer getCustomerById(Long id){
         return customerRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Customer not found"));
+                .orElseThrow(() -> new BusinessException("Customer not found"));
     }
 }

@@ -1,12 +1,13 @@
 package com.eduardo.tcgstore.service;
 
-import com.eduardo.tcgstore.enums.OrderStatus;
+import com.eduardo.tcgstore.exception.BusinessException;
 import com.eduardo.tcgstore.model.*;
 import com.eduardo.tcgstore.repository.OrderRepository;
 import com.eduardo.tcgstore.repository.ProductRepository;
-
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -23,38 +24,52 @@ public class OrderService {
 
     public Order createOrder(Customer customer) {
 
+        if (customer == null) {
+            throw new BusinessException("Customer is required");
+        }
+
+        if (customer.getId() == null) {
+            throw new BusinessException("Customer id is required");
+        }
+
         Order order = new Order();
-        order.setCustomer(customer);
-        order.setStatus(OrderStatus.CREATED);
+        order.setCustomerId(customer.getId());
+        order.setCustomerName(customer.getName());
+        order.setCreatedAt(LocalDateTime.now());
+        order.setStatus(Order.OrderStatus.CREATED);
+        order.setTotal(BigDecimal.ZERO);
+
         return orderRepository.save(order);
     }
 
     public void addItemToOrder(Long orderId, Long productId, int quantity) {
-
         Order order = orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new BusinessException("Order not found"));
 
         Product product = productRepository.findById(productId)
-                .orElseThrow(() -> new RuntimeException("Product not found"));
+                .orElseThrow(() -> new BusinessException("Product not found"));
 
-        if (order.getStatus() != OrderStatus.CREATED) {
-            throw new RuntimeException("Items can only be added to orders in CREATED status");
+        if (order.getStatus() != Order.OrderStatus.CREATED) {
+            throw new BusinessException("Items can only be added to orders in CREATED status");
         }
 
-        if (!product.isActive()) {
-            throw new RuntimeException("Inactive products cannot be added to an order");
+        if (product.getStatus() != Product.ProductStatus.ACTIVE) {
+            throw new BusinessException("Inactive products cannot be added to an order");
         }
 
         if (quantity <= 0) {
-            throw new IllegalArgumentException("Quantity must be greater than zero");
+            throw new BusinessException("Quantity must be greater than zero");
         }
 
-        if (quantity > product.getStock()) {
-            throw new RuntimeException("Not enough stock available for product: " + product.getName());
+        if (product.getStock() < quantity) {
+            throw new BusinessException("Not enough stock available for product: " + product.getName());
         }
 
-        OrderItem item = new OrderItem(product, quantity);
-        order.addItem(item);
+        BigDecimal subtotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
+        OrderItem item = new OrderItem(product, quantity, subtotal);
+
+        order.getItems().add(item);
+        recalculateOrderTotal(order);
 
         orderRepository.save(order);
     }
@@ -65,27 +80,25 @@ public class OrderService {
 
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
-                .orElseThrow(() -> new RuntimeException("Order not found"));
+                .orElseThrow(() -> new BusinessException("Order not found"));
     }
 
     public void confirmOrder(Long orderId) {
         Order order = getOrderById(orderId);
 
-        if (order.getStatus() != OrderStatus.CREATED) {
-            throw new RuntimeException("Only orders in CREATED status can be confirmed");
+        if (order.getStatus() != Order.OrderStatus.CREATED) {
+            throw new BusinessException("Only orders in CREATED status can be confirmed");
         }
 
-        if (order.getItems().isEmpty()) {
-            throw new RuntimeException("Order must contain at least one item");
+        if (order.getItems() == null || order.getItems().isEmpty()) {
+            throw new BusinessException("Order must contain at least one item");
         }
 
         for (OrderItem item : order.getItems()) {
             Product product = item.getProduct();
 
             if (product.getStock() < item.getQuantity()) {
-                throw new RuntimeException(
-                        "Insufficient stock for product: " + product.getName()
-                );
+                throw new BusinessException("Insufficient stock for product: " + product.getName());
             }
         }
 
@@ -95,24 +108,40 @@ public class OrderService {
             productRepository.save(product);
         }
 
-        order.setStatus(OrderStatus.CONFIRMED);
+        recalculateOrderTotal(order);
+        order.setStatus(Order.OrderStatus.CONFIRMED);
+
         orderRepository.save(order);
     }
 
     public void advanceOrderStatus(Long orderId) {
         Order order = getOrderById(orderId);
 
-        if (order.getStatus() == OrderStatus.CREATED) {
+        if (order.getStatus() == Order.OrderStatus.CREATED) {
             confirmOrder(orderId);
             return;
         }
 
-        if (order.getStatus() == OrderStatus.CONFIRMED) {
-            order.setStatus(OrderStatus.DELIVERED);
+        if (order.getStatus() == Order.OrderStatus.CONFIRMED) {
+            order.setStatus(Order.OrderStatus.DELIVERED);
             orderRepository.save(order);
             return;
         }
 
-        throw new RuntimeException("Order cannot advance from current status");
+        throw new BusinessException("Order cannot advance from current status");
+    }
+
+    private void recalculateOrderTotal(Order order) {
+        BigDecimal total = BigDecimal.ZERO;
+
+        if (order.getItems() != null) {
+            for (OrderItem item : order.getItems()) {
+                if (item.getSubtotal() != null) {
+                    total = total.add(item.getSubtotal());
+                }
+            }
+        }
+
+        order.setTotal(total);
     }
 }

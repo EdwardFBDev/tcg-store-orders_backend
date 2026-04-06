@@ -1,37 +1,28 @@
 package com.eduardo.tcgstore.model;
 
-import com.eduardo.tcgstore.enums.OrderStatus;
+import lombok.*;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class Order {
 
     private Long id;
-    private Customer customer;
+    private Long customerId;
+    private String customerName;
+    private LocalDateTime createdAt;
+    private OrderStatus status;
     private List<OrderItem> items = new ArrayList<>();
-    private OrderStatus status = OrderStatus.CREATED;
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private BigDecimal total;
 
-    public BigDecimal getTotal() {
-        BigDecimal total = BigDecimal.ZERO;
-
-        for (OrderItem item : items) {
-            total = total.add(item.getSubtotal());
-        }
-        return total;
+    public enum OrderStatus {
+        CREATED,
+        CONFIRMED,
+        SHIPPED,
+        DELIVERED,
+        CANCELLED
     }
 
-    public void addItem(OrderItem item) {
-        this.items.add(item);
-    }
 }

@@ -1,5 +1,6 @@
 package com.eduardo.tcgstore.controller;
 
+import com.eduardo.tcgstore.exception.BusinessException;
 import com.eduardo.tcgstore.model.Customer;
 import com.eduardo.tcgstore.service.CustomerService;
 import com.eduardo.tcgstore.service.OrderService;
@@ -37,13 +38,12 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public String createOrder(@RequestParam Long customerId,
-                              RedirectAttributes redirectAttributes) {
+    public String createOrder(@RequestParam Long customerId, RedirectAttributes redirectAttributes) {
         try {
             Customer customer = customerService.getCustomerById(customerId);
             orderService.createOrder(customer);
             redirectAttributes.addFlashAttribute("successMessage", "Order created successfully.");
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
 
@@ -65,7 +65,7 @@ public class OrderController {
         try {
             orderService.addItemToOrder(id, productId, quantity);
             redirectAttributes.addFlashAttribute("successMessage", "Item added successfully.");
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
 
@@ -73,12 +73,11 @@ public class OrderController {
     }
 
     @PostMapping("/orders/{id}/confirm")
-    public String confirmOrder(@PathVariable Long id,
-                               RedirectAttributes redirectAttributes) {
+    public String confirmOrder(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             orderService.confirmOrder(id);
             redirectAttributes.addFlashAttribute("successMessage", "Order confirmed successfully.");
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
 
@@ -86,12 +85,11 @@ public class OrderController {
     }
 
     @PostMapping("/orders/{id}/advance")
-    public String advanceOrderStatus(@PathVariable Long id,
-                                     RedirectAttributes redirectAttributes) {
+    public String advanceOrderStatus(@PathVariable Long id, RedirectAttributes redirectAttributes) {
         try {
             orderService.advanceOrderStatus(id);
             redirectAttributes.addFlashAttribute("successMessage", "Order status updated successfully.");
-        } catch (RuntimeException e) {
+        } catch (BusinessException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
 

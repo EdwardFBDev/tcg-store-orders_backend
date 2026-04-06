@@ -1,20 +1,21 @@
 package com.eduardo.tcgstore.repository;
 
 import com.eduardo.tcgstore.model.Customer;
-
 import org.springframework.stereotype.Repository;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 @Repository
 public class CustomerRepository {
 
-    private Map<Long, Customer> customerStorage = new HashMap<>();
+    private final Map<Long, Customer> customerStorage = new HashMap<>();
     private Long nextId = 1L;
 
-
     public Customer save(Customer customer) {
-
         if (customer.getId() == null) {
             customer.setId(nextId++);
         }
@@ -34,5 +35,4 @@ public class CustomerRepository {
     public void deleteById(Long id) {
         customerStorage.remove(id);
     }
-
 }

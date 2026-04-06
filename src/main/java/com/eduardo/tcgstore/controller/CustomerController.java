@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
 public class CustomerController {
+
     private final CustomerService customerService;
 
     public CustomerController(CustomerService customerService){
@@ -21,22 +22,19 @@ public class CustomerController {
     }
 
     @GetMapping("/customers")
-    public String showCustomers(Model model){
-
-        model.addAttribute("customers",customerService.getAllCustomers());
+    public String showCustomers(Model model) {
+        model.addAttribute("customers", customerService.getAllCustomers());
         return "customers/list";
     }
 
     @GetMapping("/customers/new")
     public String showCreateForm(Model model) {
-
         model.addAttribute("customer", new Customer());
         return "customers/form";
     }
 
-    @PostMapping("/customers") // guarda validando
-    public String createCustomer(@Valid Customer customer,
-                                 BindingResult bindingResult) {
+    @PostMapping("/customers")
+    public String createCustomer(@Valid Customer customer, BindingResult bindingResult) {
 
         if (bindingResult.hasErrors()) {
             return "customers/form";
