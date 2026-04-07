@@ -2,9 +2,7 @@ package com.eduardo.tcgstore.controller;
 
 import com.eduardo.tcgstore.model.Customer;
 import com.eduardo.tcgstore.service.CustomerService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,8 +14,7 @@ public class CustomerController {
 
     private final CustomerService customerService;
 
-    public CustomerController(CustomerService customerService){
-
+    public CustomerController(CustomerService customerService) {
         this.customerService = customerService;
     }
 
@@ -35,7 +32,6 @@ public class CustomerController {
 
     @PostMapping("/customers")
     public String createCustomer(@Valid Customer customer, BindingResult bindingResult) {
-
         if (bindingResult.hasErrors()) {
             return "customers/form";
         }
@@ -43,6 +39,4 @@ public class CustomerController {
         customerService.createCustomer(customer);
         return "redirect:/customers";
     }
-
-
 }

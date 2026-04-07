@@ -2,9 +2,7 @@ package com.eduardo.tcgstore.controller;
 
 import com.eduardo.tcgstore.model.Product;
 import com.eduardo.tcgstore.service.ProductService;
-
 import jakarta.validation.Valid;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -12,7 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 @Controller
-// esto hace que spring maneje rutas web y retornara vistas html
 public class ProductController {
 
     private final ProductService productService;
@@ -37,11 +34,9 @@ public class ProductController {
     }
 
     @PostMapping("/products")
-    public String createProduct(
-            @Valid Product product,
-            BindingResult bindingResult,
-            Model model
-    ) {
+    public String createProduct(@Valid Product product,
+                                BindingResult bindingResult,
+                                Model model) {
         if (bindingResult.hasErrors()) {
             model.addAttribute("cardGames", Product.CardGame.values());
             model.addAttribute("categories", Product.ProductCategory.values());

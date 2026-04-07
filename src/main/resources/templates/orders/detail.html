@@ -8,23 +8,19 @@
 </head>
 
 <body>
-<div th:replace="~{fragments/layout :: navbar}"></div>
+<div th:replace="fragments/layout :: navbar"></div>
 
 <h1>Order Detail</h1>
 
-<!-- SUCCESS MESSAGE -->
 <div th:if="${successMessage}" class="success-message">
     <p th:text="${successMessage}"></p>
 </div>
 
-<!-- ERROR MESSAGE -->
 <div th:if="${errorMessage}" class="error-message">
     <p th:text="${errorMessage}"></p>
 </div>
 
-<!-- ORDER SUMMARY -->
 <div class="form-container">
-
     <p>
         <strong>Order ID:</strong>
         <span th:text="${order.id}"></span>
@@ -32,7 +28,7 @@
 
     <p>
         <strong>Customer:</strong>
-        <span th:text="${order.customer.name}"></span>
+        <span th:text="${order.customerName}"></span>
     </p>
 
     <p>
@@ -50,105 +46,62 @@
         <span th:text="${order.total}"></span>
     </p>
 
-    <!-- ADVANCE STATUS BUTTON -->
     <form th:if="${order.status.name() == 'CREATED' or order.status.name() == 'CONFIRMED'}"
           th:action="@{/orders/{id}/advance(id=${order.id})}"
           method="post">
-
         <button type="submit">Advance Status</button>
-
     </form>
-
 </div>
-
 
 <h2>Add Product</h2>
 
-<!-- ADD ITEM FORM -->
 <div class="form-container" th:if="${order.status.name() == 'CREATED'}">
-
     <form th:action="@{/orders/{id}/items(id=${order.id})}" method="post">
-
         <div class="form-group">
-
             <label for="productId">Product</label>
-
             <select id="productId" name="productId" required>
-
                 <option value="">Select a product</option>
-
                 <option th:each="product : ${products}"
                         th:value="${product.id}"
                         th:text="${product.name + ' - $' + product.price + ' (Stock: ' + product.stock + ')'}">
                 </option>
-
             </select>
-
         </div>
-
 
         <div class="form-group">
-
             <label for="quantity">Quantity</label>
-
-            <input type="number"
-                   id="quantity"
-                   name="quantity"
-                   min="1"
-                   required>
-
+            <input type="number" id="quantity" name="quantity" min="1" required>
         </div>
 
-
         <button type="submit">Add Item</button>
-
     </form>
-
 </div>
-
 
 <h2>Items</h2>
 
-<!-- ITEMS TABLE -->
 <div class="table-container">
-
     <table>
-
         <thead>
         <tr>
             <th>Product</th>
             <th>Quantity</th>
-            <th>Unit Price</th>
             <th>Subtotal</th>
         </tr>
         </thead>
 
         <tbody>
-
-        <!-- WHEN ORDER HAS NO ITEMS -->
         <tr th:if="${#lists.isEmpty(order.items)}">
-            <td colspan="4">No items added yet</td>
+            <td colspan="3">No items added yet</td>
         </tr>
 
-        <!-- ITEMS -->
         <tr th:each="item : ${order.items}">
-
-            <td th:text="${item.product.name}"></td>
-
+            <td th:text="${item.productName}"></td>
             <td th:text="${item.quantity}"></td>
-
-            <td th:text="${item.product.price}"></td>
-
             <td th:text="${item.subtotal}"></td>
-
         </tr>
-
         </tbody>
-
     </table>
-
 </div>
-
 
 <br>
 

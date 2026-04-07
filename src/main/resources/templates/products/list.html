@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:replace="~{fragments/layout :: navbar}"></div>
+<div th:replace="fragments/layout :: navbar"></div>
 
 <h1>TCG Product Catalog</h1>
 
@@ -34,8 +34,8 @@
             <td th:text="${product.price}"></td>
             <td th:text="${product.stock}"></td>
             <td>
-                <span th:if="${product.active}" class="active">Active</span>
-                <span th:unless="${product.active}" class="inactive">Inactive</span>
+                <span th:if="${product.status.name() == 'ACTIVE'}" class="active">Active</span>
+                <span th:if="${product.status.name() == 'INACTIVE'}" class="inactive">Inactive</span>
             </td>
         </tr>
         </tbody>

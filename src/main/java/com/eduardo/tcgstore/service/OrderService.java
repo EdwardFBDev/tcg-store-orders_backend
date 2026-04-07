@@ -1,13 +1,17 @@
 package com.eduardo.tcgstore.service;
 
 import com.eduardo.tcgstore.exception.BusinessException;
-import com.eduardo.tcgstore.model.*;
+import com.eduardo.tcgstore.model.Customer;
+import com.eduardo.tcgstore.model.Order;
+import com.eduardo.tcgstore.model.OrderItem;
+import com.eduardo.tcgstore.model.Product;
 import com.eduardo.tcgstore.repository.OrderRepository;
 import com.eduardo.tcgstore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -16,14 +20,13 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ProductRepository productRepository;
 
-    public OrderService (OrderRepository orderRepository,
-                         ProductRepository productRepository) {
+    public OrderService(OrderRepository orderRepository,
+                        ProductRepository productRepository) {
         this.orderRepository = orderRepository;
         this.productRepository = productRepository;
     }
 
     public Order createOrder(Customer customer) {
-
         if (customer == null) {
             throw new BusinessException("Customer is required");
         }
@@ -38,13 +41,24 @@ public class OrderService {
         order.setCreatedAt(LocalDateTime.now());
         order.setStatus(Order.OrderStatus.CREATED);
         order.setTotal(BigDecimal.ZERO);
+        order.setItems(new ArrayList<>());
 
         return orderRepository.save(order);
     }
 
-    public void addItemToOrder(Long orderId, Long productId, int quantity) {
-        Order order = orderRepository.findById(orderId)
+    public List<Order> getAllOrders() {
+        List<Order> orders = new ArrayList<>();
+        orderRepository.findAll().forEach(orders::add);
+        return orders;
+    }
+
+    public Order getOrderById(Long orderId) {
+        return orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException("Order not found"));
+    }
+
+    public void addItemToOrder(Long orderId, Long productId, int quantity) {
+        Order order = getOrderById(orderId);
 
         Product product = productRepository.findById(productId)
                 .orElseThrow(() -> new BusinessException("Product not found"));
@@ -66,21 +80,22 @@ public class OrderService {
         }
 
         BigDecimal subtotal = product.getPrice().multiply(BigDecimal.valueOf(quantity));
-        OrderItem item = new OrderItem(product, quantity, subtotal);
+
+        OrderItem item = new OrderItem();
+        item.setProductId(product.getId());
+        item.setProductName(product.getName());
+        item.setUnitPrice(product.getPrice());
+        item.setQuantity(quantity);
+        item.setSubtotal(subtotal);
+
+        if (order.getItems() == null) {
+            order.setItems(new ArrayList<>());
+        }
 
         order.getItems().add(item);
         recalculateOrderTotal(order);
 
         orderRepository.save(order);
-    }
-
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
-    }
-
-    public Order getOrderById(Long orderId) {
-        return orderRepository.findById(orderId)
-                .orElseThrow(() -> new BusinessException("Order not found"));
     }
 
     public void confirmOrder(Long orderId) {
@@ -95,7 +110,8 @@ public class OrderService {
         }
 
         for (OrderItem item : order.getItems()) {
-            Product product = item.getProduct();
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new BusinessException("Product not found for item: " + item.getProductName()));
 
             if (product.getStock() < item.getQuantity()) {
                 throw new BusinessException("Insufficient stock for product: " + product.getName());
@@ -103,7 +119,9 @@ public class OrderService {
         }
 
         for (OrderItem item : order.getItems()) {
-            Product product = item.getProduct();
+            Product product = productRepository.findById(item.getProductId())
+                    .orElseThrow(() -> new BusinessException("Product not found for item: " + item.getProductName()));
+
             product.setStock(product.getStock() - item.getQuantity());
             productRepository.save(product);
         }

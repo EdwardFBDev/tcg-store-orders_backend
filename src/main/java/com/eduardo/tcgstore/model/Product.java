@@ -2,6 +2,9 @@ package com.eduardo.tcgstore.model;
 
 import java.math.BigDecimal;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Table;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,9 +14,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Table("PRODUCT")
 public class Product {
 
+    @Id
     private Long id;
+
     private String name;
     private CardGame cardGame;
     private ProductCategory category;
@@ -21,10 +27,9 @@ public class Product {
     private Integer stock;
     private ProductStatus status;
 
-
-    public enum ProductCategory {
+    public enum CardGame {
         POKEMON,
-        MAGIC,
+        MAGIC_THE_GATHERING,
         LORCANA,
         ONE_PIECE
     }

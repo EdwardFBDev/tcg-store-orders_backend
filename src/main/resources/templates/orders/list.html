@@ -6,7 +6,7 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:replace="~{fragments/layout :: navbar}"></div>
+<div th:replace="fragments/layout :: navbar"></div>
 
 <h1>Order List</h1>
 
@@ -35,7 +35,7 @@
         <tbody>
         <tr th:each="order : ${orders}">
             <td th:text="${order.id}"></td>
-            <td th:text="${order.customer != null ? order.customer.name : 'No customer'}"></td>
+            <td th:text="${order.customerName != null ? order.customerName : 'No customer'}"></td>
             <td th:text="${order.status}"></td>
             <td th:text="${order.createdAt}"></td>
             <td th:text="${order.total}"></td>

@@ -6,26 +6,16 @@
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div th:replace="~{fragments/layout :: navbar}"></div>
+<div th:replace="fragments/layout :: navbar"></div>
 
 <h1>Create Product</h1>
-<!--
-    th:object="${product}"  -> este formulario trabajara con obj product
-    th:field="*{name}"      -> vincula el campo html con la propiedad name del obj product
-    method="post"           -> cuando se envia el formulario, va a la ruta POST/ products
--->
+
 <div class="form-container">
     <form th:action="@{/products}" th:object="${product}" method="post">
 
         <div class="form-group">
             <label for="name">Product Name</label>
             <input type="text" id="name" th:field="*{name}">
-            <!--
-                th:errors="*{name}  -> se pegunta si ese campo tiene error
-                th:errors="*{name}  -> Muestra un mensaje que viene de model de valid
-
-                ...asi con los espacios de validacion segun model/Product
-            -->
             <div class="error-message" th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></div>
         </div>
 
@@ -66,11 +56,15 @@
         </div>
 
         <div class="form-group">
-            <label for="active">Status</label>
-            <select id="active" th:field="*{active}">
-                <option th:value="true">Active</option>
-                <option th:value="false">Inactive</option>
+            <label for="status">Status</label>
+            <select id="status" th:field="*{status}">
+                <option value="">Select a status</option>
+                <option th:each="status : ${statuses}"
+                        th:value="${status}"
+                        th:text="${status}">
+                </option>
             </select>
+            <div class="error-message" th:if="${#fields.hasErrors('status')}" th:errors="*{status}"></div>
         </div>
 
         <button type="submit">Save Product</button>
