@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>TCG Store - Products</title>
@@ -10,7 +11,7 @@
 
 <h1>TCG Product Catalog</h1>
 
-<a th:href="@{/products/new}" class="btn">Add Product</a>
+<a th:href="@{/products/new}" class="btn" sec:authorize="hasRole('ADMIN')">Add Product</a>
 
 <div class="table-container">
     <table>

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Layout Fragments</title>
@@ -14,6 +15,14 @@
             <a th:href="@{/products}">Products</a>
             <a th:href="@{/customers}">Customers</a>
             <a th:href="@{/orders}">Orders</a>
+
+            <span sec:authorize="isAuthenticated()">
+                Welcome, <span sec:authentication="name"></span>
+            </span>
+
+            <form th:action="@{/logout}" method="post" sec:authorize="isAuthenticated()" style="display:inline;">
+                <button type="submit">Logout</button>
+            </form>
         </div>
     </div>
 </nav>
