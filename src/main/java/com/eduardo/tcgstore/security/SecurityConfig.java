@@ -38,7 +38,9 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
+                        .requestMatchers("/login", "/error").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
+                        .requestMatchers("/graphql/**", "/graphiql/**").permitAll()
                         .requestMatchers("/products/new").hasRole("ADMIN")
                         .requestMatchers("/products/**").hasAnyRole("ADMIN", "REGULAR")
                         .requestMatchers("/orders/**").hasAnyRole("ADMIN", "REGULAR")
@@ -49,7 +51,7 @@ public class SecurityConfig {
                 .logout(Customizer.withDefaults());
 
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
-        http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**"));
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/graphql/**"));
 
         return http.build();
     }
