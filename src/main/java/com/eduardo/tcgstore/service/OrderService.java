@@ -15,6 +15,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Service responsible for order creation, order confirmation,
+ * checkout processing, stock validation and order lifecycle transitions.
+ */
 @Service
 public class OrderService {
 
@@ -27,6 +31,9 @@ public class OrderService {
         this.productRepository = productRepository;
     }
 
+    /**
+     * Creates an empty order in CREATED status for a given customer.
+     */
     public Order createOrder(Customer customer) {
         if (customer == null) {
             throw new BusinessException("Customer is required");
@@ -47,17 +54,29 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    /**
+     * Returns all orders registered in the system.
+     */
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         orderRepository.findAll().forEach(orders::add);
         return orders;
     }
 
+    /**
+     * Returns a single order by id.
+     */
     public Order getOrderById(Long orderId) {
         return orderRepository.findById(orderId)
                 .orElseThrow(() -> new BusinessException("Order not found"));
     }
 
+    /**
+     * Adds a product to an existing order while validating:
+     * - order status
+     * - product availability
+     * - stock quantity
+     */
     public void addItemToOrder(Long orderId, Long productId, int quantity) {
         Order order = getOrderById(orderId);
 
@@ -99,6 +118,10 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    /**
+     * Converts the current shopping cart into a confirmed order.
+     * This method also reduces inventory immediately and stores the purchase.
+     */
     public Order checkoutCart(Customer customer, List<CartItemView> cartItems) {
         if (customer == null) {
             throw new BusinessException("Customer is required");
@@ -144,6 +167,9 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
+    /**
+     * Confirms an order created manually from the admin flow and reduces stock.
+     */
     public void confirmOrder(Long orderId) {
         Order order = getOrderById(orderId);
 
@@ -178,6 +204,11 @@ public class OrderService {
         orderRepository.save(order);
     }
 
+    /**
+     * Moves an order to the next logical status.
+     * CREATED -> CONFIRMED
+     * CONFIRMED -> DELIVERED
+     */
     public void advanceOrderStatus(Long orderId) {
         Order order = getOrderById(orderId);
 
@@ -195,6 +226,9 @@ public class OrderService {
         throw new BusinessException("Order cannot advance from current status");
     }
 
+    /**
+     * Recalculates the total order amount from all order item subtotals.
+     */
     private void recalculateOrderTotal(Order order) {
         BigDecimal total = BigDecimal.ZERO;
 

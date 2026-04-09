@@ -8,7 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
+/**
+ * Controller responsible for handling product views and interactions.
+ *
+ * Provides endpoints for:
+ * - Displaying the product catalog (public shop)
+ * - Creating new products (admin)
+ *
+ * It connects the UI layer with product business logic.
+ */
 @Controller
 public class ProductController {
 

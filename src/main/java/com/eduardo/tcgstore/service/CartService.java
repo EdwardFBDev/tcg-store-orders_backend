@@ -11,7 +11,15 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-
+/**
+ * Service responsible for managing the shopping cart.
+ *
+ * The cart is stored in the HTTP session and is not persisted.
+ * It allows adding, removing and clearing products before checkout.
+ *
+ * It acts as a temporary layer between product browsing
+ * and order creation.
+ */
 @Service
 public class CartService {
 

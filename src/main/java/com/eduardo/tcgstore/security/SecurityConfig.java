@@ -11,7 +11,17 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
-
+/**
+ * Main security configuration of the application.
+ *
+ * Defines:
+ * - Password encryption using BCrypt
+ * - Authentication providers for admin and database users
+ * - Public and protected routes
+ * - Custom login and logout behavior
+ *
+ * This class separates public store access from admin-only features.
+ */
 @Configuration
 public class SecurityConfig {
 

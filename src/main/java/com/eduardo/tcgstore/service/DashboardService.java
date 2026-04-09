@@ -8,7 +8,17 @@ import com.eduardo.tcgstore.repository.ProductRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-
+/**
+ * Service responsible for calculating business metrics.
+ *
+ * Provides aggregated data used in the admin dashboard such as:
+ * - Total customers
+ * - Total orders
+ * - Total revenue
+ * - Inventory value
+ *
+ * This service helps simulate real business insights.
+ */
 @Service
 public class DashboardService {
 

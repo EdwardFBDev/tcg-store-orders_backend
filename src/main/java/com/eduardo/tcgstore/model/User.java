@@ -13,6 +13,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("USERS")
+/**
+ * Represents an authenticated user of the system.
+ *
+ * Users are responsible for authentication and authorization.
+ * They can have different roles such as ADMIN or REGULAR,
+ * which determine access to protected resources.
+ *
+ * This entity is separate from Customer to distinguish
+ * authentication from business data.
+ */
 public class User {
 
     @Id

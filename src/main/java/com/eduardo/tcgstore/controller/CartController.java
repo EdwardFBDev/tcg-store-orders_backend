@@ -16,6 +16,17 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
+/**
+ * Controller responsible for the public shopping cart flow.
+ *
+ * Handles:
+ * - Viewing cart contents
+ * - Adding/removing products
+ * - Clearing the cart
+ * - Checkout process
+ *
+ * Integrates session-based cart with order creation.
+ */
 @Controller
 public class CartController {
 

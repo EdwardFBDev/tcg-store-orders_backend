@@ -8,7 +8,15 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-
+/**
+ * Controller responsible for customer management.
+ *
+ * Allows administrators to:
+ * - View customers
+ * - Create customers manually
+ *
+ * Customers are mainly used to associate purchases with users.
+ */
 @Controller
 public class CustomerController {
 

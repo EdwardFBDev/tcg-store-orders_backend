@@ -7,7 +7,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Service responsible for product business logic.
+ *
+ * Handles product creation, validation, retrieval and updates.
+ * Ensures that only valid products are stored and that business
+ * rules such as stock and status are respected.
+ *
+ * This service is used by both the public shop and admin panel.
+ */
 @Service
 public class ProductService {
 

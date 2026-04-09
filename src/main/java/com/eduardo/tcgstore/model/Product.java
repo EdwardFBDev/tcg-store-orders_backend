@@ -15,6 +15,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("PRODUCT")
+/**
+ * Represents a product available in the store catalog.
+ *
+ * A product contains information such as name, card game, category,
+ * price, stock and status. It is used both in the public shop
+ * and in the admin management module.
+ *
+ * The status field determines if the product can be purchased.
+ */
 public class Product {
 
     @Id

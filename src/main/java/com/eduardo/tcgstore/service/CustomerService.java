@@ -7,7 +7,16 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Service responsible for customer management.
+ *
+ * Handles creation and retrieval of customers.
+ * It also provides a utility method to automatically create
+ * a customer from an authenticated user during checkout.
+ *
+ * This allows linking purchases to users without requiring
+ * manual customer creation.
+ */
 @Service
 public class CustomerService {
 

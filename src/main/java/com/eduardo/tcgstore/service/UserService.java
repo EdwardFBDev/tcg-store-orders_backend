@@ -8,7 +8,14 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+ * Service responsible for user registration and management.
+ *
+ * Handles user creation with password encryption and role assignment.
+ * Ensures that usernames are unique and passwords are securely stored.
+ *
+ * This service is part of the authentication layer.
+ */
 @Service
 public class UserService {
 

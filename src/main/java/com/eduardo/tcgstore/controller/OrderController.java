@@ -12,7 +12,17 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+/**
+ * Controller responsible for order management in the admin panel.
+ *
+ * Allows administrators to:
+ * - View all orders
+ * - Create orders manually
+ * - View order details
+ * - Advance order status
+ *
+ * This represents the backoffice order management system.
+ */
 @Controller
 public class OrderController {
 

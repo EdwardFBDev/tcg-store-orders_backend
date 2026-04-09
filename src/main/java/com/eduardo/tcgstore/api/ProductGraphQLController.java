@@ -9,8 +9,19 @@ import org.springframework.graphql.data.method.annotation.MutationMapping;
 import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.stereotype.Controller;
 
+import java.math.BigDecimal;
 import java.util.List;
 
+/**
+ * GraphQL controller used to expose store data.
+ *
+ * Provides:
+ * - Query for retrieving products
+ * - Query for retrieving orders
+ * - Mutation for creating products
+ *
+ * This allows flexible data access compared to traditional REST endpoints.
+ */
 @Controller
 public class ProductGraphQLController {
 
@@ -45,7 +56,7 @@ public class ProductGraphQLController {
         product.setName(name);
         product.setCardGame(Product.CardGame.valueOf(cardGame));
         product.setCategory(Product.ProductCategory.valueOf(category));
-        product.setPrice(java.math.BigDecimal.valueOf(price));
+        product.setPrice(BigDecimal.valueOf(price));
         product.setStock(stock);
         product.setStatus(Product.ProductStatus.valueOf(status));
 

@@ -4,7 +4,17 @@ import com.eduardo.tcgstore.service.DashboardService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
+/**
+ * Controller responsible for the admin dashboard.
+ *
+ * Displays key business metrics such as:
+ * - Total customers
+ * - Total orders
+ * - Revenue
+ * - Inventory value
+ *
+ * Provides a high-level overview of store performance.
+ */
 @Controller
 public class DashboardController {
 

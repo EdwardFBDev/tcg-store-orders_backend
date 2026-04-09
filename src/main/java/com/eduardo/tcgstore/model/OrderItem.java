@@ -15,6 +15,15 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("ORDER_ITEM")
+/**
+ * Represents a single item inside an order.
+ *
+ * Each order item stores the product reference,
+ * quantity purchased, unit price at the moment of purchase,
+ * and the calculated subtotal.
+ *
+ * This design ensures historical consistency even if product prices change.
+ */
 public class OrderItem {
 
     @Id

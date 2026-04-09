@@ -14,6 +14,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Represents a store order.
+ *
+ * This entity is the aggregate root for order persistence in Spring Data JDBC.
+ * It stores the customer reference, general order information, total amount,
+ * and the list of order items associated with the purchase.
+ */
 @Getter
 @Setter
 @NoArgsConstructor
@@ -30,6 +37,10 @@ public class Order {
     private OrderStatus status;
     private BigDecimal total;
 
+    /**
+     * Child collection of items stored under this order.
+     * ORDER_ID links the parent order and ORDERS_KEY preserves list order.
+     */
     @MappedCollection(idColumn = "ORDER_ID", keyColumn = "ORDERS_KEY")
     private List<OrderItem> items = new ArrayList<>();
 

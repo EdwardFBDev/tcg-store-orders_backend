@@ -13,6 +13,13 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table("CUSTOMER")
+/**
+ * Represents a customer in the system.
+ *
+ * Customers are linked to orders and represent the buyer identity.
+ * In this project, customers are created automatically based on
+ * authenticated users during checkout.
+ */
 public class Customer {
 
     @Id
