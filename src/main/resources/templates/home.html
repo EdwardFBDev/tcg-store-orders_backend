@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>TCG Store</title>
@@ -7,14 +8,78 @@
 </head>
 <body>
 
-<div th:replace="~{fragments/layout :: navbar}"></div>
+<div th:replace="fragments/layout :: navbar"></div>
 
-<h1>Welcome to TCG Store</h1>
+<section class="hero-section">
+    <div class="hero-content">
+        <p class="eyebrow">Trading Card Games</p>
+        <h1>Build your next deck with products from your favorite TCGs</h1>
+        <p class="hero-text">
+            Explore Pokémon, Magic, Lorcana and One Piece products in a cleaner and more modern storefront.
+        </p>
 
-<div class="form-container">
-    <p>This is the order management system for a small TCG business.</p>
-    <p>Use the navigation bar to manage products, customers, and orders.</p>
-</div>
+        <div class="hero-actions">
+            <a th:href="@{/products}" class="btn">Shop Now</a>
+            <a th:href="@{/register}" class="btn btn-secondary" sec:authorize="isAnonymous()">Create Account</a>
+        </div>
+    </div>
+
+    <div class="hero-side-card">
+        <h3>Store Highlights</h3>
+        <ul class="hero-highlight-list">
+            <li>Products grouped by TCG</li>
+            <li>Role-based access for admin features</li>
+            <li>GraphQL queries and mutations enabled</li>
+            <li>Real persistence with Spring Data JDBC</li>
+        </ul>
+    </div>
+</section>
+
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Featured</p>
+        <h2>Featured Products</h2>
+        <p class="page-subtitle">A quick look at some items available in the store.</p>
+    </div>
+</section>
+
+<section class="catalog-grid">
+    <div class="product-card" th:each="product : ${featuredProducts}">
+        <div class="product-image">
+            <div class="product-image-placeholder">
+                <span th:text="${product.cardGame}">TCG</span>
+            </div>
+        </div>
+
+        <div class="product-card-body">
+            <div class="product-meta">
+                <span th:text="${product.cardGame}">POKEMON</span>
+                <span th:text="${product.category}">BOOSTER_PACK</span>
+            </div>
+
+            <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+
+            <div class="product-info-row">
+                <span class="product-price" th:text="'$' + ${product.price}">$0.00</span>
+                <span class="product-stock" th:text="'Stock: ' + ${product.stock}">Stock: 0</span>
+            </div>
+
+            <div class="product-status-row">
+                <span th:if="${product.status != null and product.status.name() == 'ACTIVE'}"
+                      class="status-badge status-active">Active</span>
+                <span th:if="${product.status != null and product.status.name() == 'INACTIVE'}"
+                      class="status-badge status-inactive">Inactive</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="store-cta">
+    <div class="summary-card">
+        <span class="summary-label">Ready to browse the full catalog?</span>
+        <a th:href="@{/products}" class="btn">View All Products</a>
+    </div>
+</section>
 
 </body>
 </html>

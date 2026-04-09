@@ -12,11 +12,18 @@
         <a th:href="@{/}" class="nav-brand">TCG Store</a>
 
         <div class="nav-links">
-            <a th:href="@{/products}">Products</a>
-            <a th:href="@{/customers}">Customers</a>
-            <a th:href="@{/orders}">Orders</a>
+            <a th:href="@{/products}">Shop</a>
+            <a th:href="@{/cart}" class="cart-link">
+                🛒 Cart (<span th:text="${cartItemCount}">0</span>)
+            </a>
 
+            <a th:href="@{/admin/dashboard}" sec:authorize="hasRole('ADMIN')">Dashboard</a>
             <a th:href="@{/register}" sec:authorize="isAnonymous()">Register</a>
+            <a th:href="@{/login}" sec:authorize="isAnonymous()">Login</a>
+
+            <a th:href="@{/orders}" sec:authorize="hasRole('ADMIN')">Admin Orders</a>
+            <a th:href="@{/customers}" sec:authorize="hasRole('ADMIN')">Admin Customers</a>
+            <a th:href="@{/products/new}" sec:authorize="hasRole('ADMIN')">Add Product</a>
 
             <span sec:authorize="isAuthenticated()">
                 Welcome, <span sec:authentication="name"></span>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Cart - TCG Store</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<div th:replace="fragments/layout :: navbar"></div>
+
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Cart</p>
+        <h1>Your Cart</h1>
+        <p class="page-subtitle">Review your selected products before continuing.</p>
+    </div>
+</section>
+
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
+</div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<div class="cart-layout">
+    <div class="cart-items-panel">
+
+        <div th:if="${#lists.isEmpty(cartItems)}" class="summary-card">
+            <span class="summary-label">Your cart is empty</span>
+            <p>Browse the catalog and add products to your cart.</p>
+            <a th:href="@{/products}" class="btn">Go to Shop</a>
+        </div>
+
+        <div th:if="${!#lists.isEmpty(cartItems)}" class="table-container">
+            <table>
+                <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Game</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Subtotal</th>
+                    <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="item : ${cartItems}">
+                    <td th:text="${item.productName}"></td>
+                    <td th:text="${item.cardGame}"></td>
+                    <td th:text="${item.quantity}"></td>
+                    <td th:text="'$' + ${item.unitPrice}"></td>
+                    <td th:text="'$' + ${item.subtotal}"></td>
+                    <td>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="productId" th:value="${item.productId}">
+                            <button type="submit">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+    <aside class="cart-summary-panel">
+        <div class="summary-card cart-summary-card">
+            <span class="summary-label">Order Summary</span>
+            <h2 th:text="'$' + ${cartTotal}">$0.00</h2>
+            <p>Total estimated amount for the products currently in your cart.</p>
+
+            <div th:if="${!#lists.isEmpty(cartItems)}" class="cart-summary-actions">
+                <a th:href="@{/products}" class="btn btn-secondary">Continue Shopping</a>
+
+                <form th:action="@{/cart/checkout}" method="post">
+                    <button type="submit">Pay / Checkout</button>
+                </form>
+
+                <form th:action="@{/cart/clear}" method="post">
+                    <button type="submit">Clear Cart</button>
+                </form>
+            </div>
+        </div>
+    </aside>
+</div>
+
+</body>
+</html>

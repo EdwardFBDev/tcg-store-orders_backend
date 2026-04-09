@@ -2,39 +2,52 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Register User</title>
+    <title>Register - TCG Store</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
-<div th:replace="fragments/layout :: navbar"></div>
+<section class="auth-page">
+    <div class="auth-hero">
+        <p class="eyebrow">Create Account</p>
+        <h1>Join your TCG Store</h1>
+        <p class="page-subtitle">
+            Register a new user account and start exploring the store as a regular customer.
+        </p>
+    </div>
 
-<h1>Register</h1>
+    <div class="auth-card">
+        <h2>Register</h2>
 
-<div th:if="${successMessage}" class="success-message">
-    <p th:text="${successMessage}"></p>
-</div>
-
-<div th:if="${errorMessage}" class="error-message">
-    <p th:text="${errorMessage}"></p>
-</div>
-
-<div class="form-container">
-    <form th:action="@{/register}" th:object="${user}" method="post">
-
-        <div class="form-group">
-            <label for="username">Username</label>
-            <input type="text" id="username" th:field="*{username}" required>
+        <div th:if="${successMessage}" class="success-message">
+            <p th:text="${successMessage}"></p>
         </div>
 
-        <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" th:field="*{password}" required>
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
         </div>
 
-        <button type="submit">Create Account</button>
-    </form>
-</div>
+        <form th:action="@{/register}" th:object="${user}" method="post">
+
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" th:field="*{username}" placeholder="Choose a username" required>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" th:field="*{password}" placeholder="Create a password" required>
+            </div>
+
+            <button type="submit" class="auth-button">Create Account</button>
+        </form>
+
+        <div class="auth-footer">
+            <p>Already have an account?</p>
+            <a th:href="@{/login}" class="btn btn-secondary">Back to Login</a>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>

@@ -1,6 +1,7 @@
 package com.eduardo.tcgstore.service;
 
 import com.eduardo.tcgstore.exception.BusinessException;
+import com.eduardo.tcgstore.model.CartItemView;
 import com.eduardo.tcgstore.model.Customer;
 import com.eduardo.tcgstore.model.Order;
 import com.eduardo.tcgstore.model.OrderItem;
@@ -96,6 +97,51 @@ public class OrderService {
         recalculateOrderTotal(order);
 
         orderRepository.save(order);
+    }
+
+    public Order checkoutCart(Customer customer, List<CartItemView> cartItems) {
+        if (customer == null) {
+            throw new BusinessException("Customer is required");
+        }
+
+        if (cartItems == null || cartItems.isEmpty()) {
+            throw new BusinessException("Cart is empty");
+        }
+
+        Order order = new Order();
+        order.setCustomerId(customer.getId());
+        order.setCustomerName(customer.getName());
+        order.setCreatedAt(LocalDateTime.now());
+        order.setStatus(Order.OrderStatus.CONFIRMED);
+        order.setItems(new ArrayList<>());
+
+        for (CartItemView cartItem : cartItems) {
+            Product product = productRepository.findById(cartItem.getProductId())
+                    .orElseThrow(() -> new BusinessException("Product not found: " + cartItem.getProductName()));
+
+            if (product.getStatus() != Product.ProductStatus.ACTIVE) {
+                throw new BusinessException("Inactive product cannot be purchased: " + product.getName());
+            }
+
+            if (product.getStock() < cartItem.getQuantity()) {
+                throw new BusinessException("Not enough stock available for product: " + product.getName());
+            }
+
+            OrderItem item = new OrderItem();
+            item.setProductId(product.getId());
+            item.setProductName(product.getName());
+            item.setUnitPrice(product.getPrice());
+            item.setQuantity(cartItem.getQuantity());
+            item.setSubtotal(product.getPrice().multiply(BigDecimal.valueOf(cartItem.getQuantity())));
+
+            order.getItems().add(item);
+
+            product.setStock(product.getStock() - cartItem.getQuantity());
+            productRepository.save(product);
+        }
+
+        recalculateOrderTotal(order);
+        return orderRepository.save(order);
     }
 
     public void confirmOrder(Long orderId) {

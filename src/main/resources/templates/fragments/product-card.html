@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<div th:fragment="productCard(product)" class="product-card">
+    <div class="product-image">
+        <div class="product-image-placeholder">
+            <span th:text="${product.cardGame}">TCG</span>
+        </div>
+    </div>
+
+    <div class="product-card-body">
+        <div class="product-meta">
+            <span class="product-game" th:text="${product.cardGame}">POKEMON</span>
+            <span class="product-category" th:text="${product.category}">BOOSTER_PACK</span>
+        </div>
+
+        <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+
+        <div class="product-info-row">
+            <span class="product-price" th:text="'$' + ${product.price}">$0.00</span>
+            <span class="product-stock" th:text="'Stock: ' + ${product.stock}">Stock: 0</span>
+        </div>
+
+        <div class="product-status-row">
+            <span th:if="${product.status.name() == 'ACTIVE'}" class="status-badge status-active">Active</span>
+            <span th:if="${product.status.name() == 'INACTIVE'}" class="status-badge status-inactive">Inactive</span>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

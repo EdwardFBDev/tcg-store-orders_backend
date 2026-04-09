@@ -9,39 +9,70 @@
 <body>
 <div th:replace="fragments/layout :: navbar"></div>
 
-<h1>TCG Product Catalog</h1>
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Catalog</p>
+        <h1>TCG Product Catalog</h1>
+        <p class="page-subtitle">Browse products by game, category, price and availability.</p>
+    </div>
 
-<a th:href="@{/products/new}" class="btn" sec:authorize="hasRole('ADMIN')">Add Product</a>
+    <div sec:authorize="hasRole('ADMIN')">
+        <a th:href="@{/products/new}" class="btn">Add Product</a>
+    </div>
+</section>
 
-<div class="table-container">
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Game</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Status</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="product : ${products}">
-            <td th:text="${product.id}"></td>
-            <td th:text="${product.name}"></td>
-            <td th:text="${product.cardGame}"></td>
-            <td th:text="${product.category}"></td>
-            <td th:text="${product.price}"></td>
-            <td th:text="${product.stock}"></td>
-            <td>
-                <span th:if="${product.status.name() == 'ACTIVE'}" class="active">Active</span>
-                <span th:if="${product.status.name() == 'INACTIVE'}" class="inactive">Inactive</span>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+<div th:if="${successMessage}" class="success-message">
+    <p th:text="${successMessage}"></p>
 </div>
+
+<div th:if="${errorMessage}" class="error-message">
+    <p th:text="${errorMessage}"></p>
+</div>
+
+<section class="catalog-summary">
+    <div class="summary-card">
+        <span class="summary-label">Available Products</span>
+        <strong th:text="${#lists.size(products)}">0</strong>
+    </div>
+</section>
+
+<section class="catalog-grid">
+    <div class="product-card" th:each="product : ${products}">
+        <div class="product-image">
+            <div class="product-image-placeholder">
+                <span th:text="${product.cardGame}">TCG</span>
+            </div>
+        </div>
+
+        <div class="product-card-body">
+            <div class="product-meta">
+                <span class="product-game" th:text="${product.cardGame}">POKEMON</span>
+                <span class="product-category" th:text="${product.category}">BOOSTER_PACK</span>
+            </div>
+
+            <h3 class="product-title" th:text="${product.name}">Product Name</h3>
+
+            <div class="product-info-row">
+                <span class="product-price" th:text="'$' + ${product.price}">$0.00</span>
+                <span class="product-stock" th:text="'Stock: ' + ${product.stock}">Stock: 0</span>
+            </div>
+
+            <div class="product-status-row">
+                <span th:if="${product.status != null and product.status.name() == 'ACTIVE'}"
+                      class="status-badge status-active">Active</span>
+                <span th:if="${product.status != null and product.status.name() == 'INACTIVE'}"
+                      class="status-badge status-inactive">Inactive</span>
+            </div>
+
+            <form th:action="@{/cart/add}" method="post" class="cart-action-form"
+                  th:if="${product.status != null and product.status.name() == 'ACTIVE'}">
+                <input type="hidden" name="productId" th:value="${product.id}">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="add-cart-button">Add to Cart</button>
+            </form>
+        </div>
+    </div>
+</section>
 
 </body>
 </html>

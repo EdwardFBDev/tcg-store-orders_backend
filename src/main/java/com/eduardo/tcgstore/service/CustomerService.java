@@ -43,4 +43,22 @@ public class CustomerService {
         return customerRepository.findById(id)
                 .orElseThrow(() -> new BusinessException("Customer not found"));
     }
+
+    public Customer findOrCreateCustomerFromUsername(String username) {
+        if (username == null || username.isBlank()) {
+            throw new BusinessException("Username is required");
+        }
+
+        for (Customer customer : getAllCustomers()) {
+            if (customer.getEmail() != null && customer.getEmail().equalsIgnoreCase(username + "@tcgstore.local")) {
+                return customer;
+            }
+        }
+
+        Customer newCustomer = new Customer();
+        newCustomer.setName(username);
+        newCustomer.setEmail(username + "@tcgstore.local");
+
+        return customerRepository.save(newCustomer);
+    }
 }

@@ -4,7 +4,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -62,17 +61,25 @@ public class SecurityConfig {
                 .authenticationProvider(inMemoryAuthenticationProvider)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
-                        .requestMatchers("/login", "/error", "/register").permitAll()
+                        .requestMatchers("/", "/login", "/error", "/register").permitAll()
+                        .requestMatchers("/products", "/cart", "/cart/**").permitAll()
+                        .requestMatchers("/products/new").hasRole("ADMIN")
+                        .requestMatchers("/orders/**").hasRole("ADMIN")
+                        .requestMatchers("/customers/**").hasRole("ADMIN")
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/graphql/**", "/graphiql/**").permitAll()
-                        .requestMatchers("/products/new").hasRole("ADMIN")
-                        .requestMatchers("/products/**").hasAnyRole("ADMIN", "REGULAR")
-                        .requestMatchers("/orders/**").hasAnyRole("ADMIN", "REGULAR")
-                        .requestMatchers("/customers/**").hasAnyRole("ADMIN", "REGULAR")
+                        .requestMatchers("/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .formLogin(Customizer.withDefaults())
-                .logout(Customizer.withDefaults());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/products", true)
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutSuccessUrl("/products")
+                        .permitAll()
+                );
 
         http.headers(headers -> headers.frameOptions(frame -> frame.disable()));
         http.csrf(csrf -> csrf.ignoringRequestMatchers("/h2-console/**", "/graphql/**"));

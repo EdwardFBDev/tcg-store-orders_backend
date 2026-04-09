@@ -43,6 +43,7 @@ CREATE TABLE ORDER_ITEM (
                             ORDERS_KEY INT NOT NULL,
                             PRODUCT_ID BIGINT NOT NULL,
                             PRODUCT_NAME VARCHAR(200) NOT NULL,
+                            UNIT_PRICE DECIMAL(10,2) NOT NULL,
                             QUANTITY INT NOT NULL,
                             SUBTOTAL DECIMAL(10,2) NOT NULL,
                             CONSTRAINT FK_ORDER_ITEM_ORDER FOREIGN KEY (ORDER_ID) REFERENCES ORDERS(ID)
