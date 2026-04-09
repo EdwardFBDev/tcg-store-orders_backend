@@ -1,6 +1,8 @@
 package com.eduardo.tcgstore.api;
 
+import com.eduardo.tcgstore.model.Order;
 import com.eduardo.tcgstore.model.Product;
+import com.eduardo.tcgstore.service.OrderService;
 import com.eduardo.tcgstore.service.ProductService;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -13,14 +15,22 @@ import java.util.List;
 public class ProductGraphQLController {
 
     private final ProductService productService;
+    private final OrderService orderService;
 
-    public ProductGraphQLController(ProductService productService) {
+    public ProductGraphQLController(ProductService productService,
+                                    OrderService orderService) {
         this.productService = productService;
+        this.orderService = orderService;
     }
 
     @QueryMapping
     public List<Product> products() {
         return productService.getAllProducts();
+    }
+
+    @QueryMapping
+    public List<Order> orders() {
+        return orderService.getAllOrders();
     }
 
     @MutationMapping

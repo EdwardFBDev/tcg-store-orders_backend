@@ -8,18 +8,36 @@ type Product {
     status: String
 }
 
+type OrderItem {
+    id: ID
+    productId: ID
+    productName: String
+    quantity: Int
+    subtotal: Float
+}
+
+type Order {
+    id: ID
+    customerId: ID
+    customerName: String
+    createdAt: String
+    status: String
+    total: Float
+    items: [OrderItem]
+}
+
 type Query {
     products: [Product]
+    orders: [Order]
 }
 
 type Mutation {
     createProduct(
-        name: String!,
-        cardGame: String!,
-        category: String!,
-        price: Float!,
-        stock: Int!,
+        name: String!
+        cardGame: String!
+        category: String!
+        price: Float!
+        stock: Int!
         status: String!
-
     ): Product
 }

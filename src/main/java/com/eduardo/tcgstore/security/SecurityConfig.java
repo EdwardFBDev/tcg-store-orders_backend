@@ -2,6 +2,8 @@ package com.eduardo.tcgstore.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -14,31 +16,53 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class SecurityConfig {
 
+    private final CustomUserDetailsService customUserDetailsService;
+
+    public SecurityConfig(CustomUserDetailsService customUserDetailsService) {
+        this.customUserDetailsService = customUserDetailsService;
+    }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
+    public UserDetailsService inMemoryAdminDetailsService(PasswordEncoder passwordEncoder) {
         return new InMemoryUserDetailsManager(
                 User.withUsername("admin")
                         .password(passwordEncoder.encode("admin123"))
                         .roles("ADMIN")
-                        .build(),
-                User.withUsername("regular")
-                        .password(passwordEncoder.encode("regular123"))
-                        .roles("REGULAR")
                         .build()
         );
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public AuthenticationProvider databaseAuthenticationProvider(PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    @Bean
+    public AuthenticationProvider inMemoryAuthenticationProvider(UserDetailsService inMemoryAdminDetailsService,
+                                                                 PasswordEncoder passwordEncoder) {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider(inMemoryAdminDetailsService);
+        provider.setPasswordEncoder(passwordEncoder);
+        return provider;
+    }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           AuthenticationProvider databaseAuthenticationProvider,
+                                           AuthenticationProvider inMemoryAuthenticationProvider) throws Exception {
+
         http
+                .authenticationProvider(databaseAuthenticationProvider)
+                .authenticationProvider(inMemoryAuthenticationProvider)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/css/**").permitAll()
-                        .requestMatchers("/login", "/error").permitAll()
+                        .requestMatchers("/login", "/error", "/register").permitAll()
                         .requestMatchers("/h2-console/**").permitAll()
                         .requestMatchers("/graphql/**", "/graphiql/**").permitAll()
                         .requestMatchers("/products/new").hasRole("ADMIN")

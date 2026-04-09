@@ -16,6 +16,8 @@
             <a th:href="@{/customers}">Customers</a>
             <a th:href="@{/orders}">Orders</a>
 
+            <a th:href="@{/register}" sec:authorize="isAnonymous()">Register</a>
+
             <span sec:authorize="isAuthenticated()">
                 Welcome, <span sec:authentication="name"></span>
             </span>

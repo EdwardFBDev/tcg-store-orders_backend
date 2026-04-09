@@ -1,9 +1,16 @@
-INSERT INTO customer (name, email) VALUES
-                                       ('Ash Ketchum', 'ash@example.com'),
-                                       ('Yugi Muto', 'yugi@example.com'),
-                                       ('Luffy D. Monkey', 'luffy@example.com');
+INSERT INTO USERS (USERNAME, PASSWORD, ROLE, ENABLED)
+VALUES
+    ('admin', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'ADMIN', TRUE),
+    ('regular', '$2a$10$N9qo8uLOickgx2ZMRZoMyeIjZAgcfl7p92ldGxad68LJZdL17lhWy', 'REGULAR', TRUE);
 
-INSERT INTO product (name, card_game, category, price, stock, status) VALUES
+INSERT INTO CUSTOMER (NAME, EMAIL)
+VALUES
+    ('Ash Ketchum', 'ash@example.com'),
+    ('Yugi Muto', 'yugi@example.com'),
+    ('Luffy D. Monkey', 'luffy@example.com');
+
+INSERT INTO PRODUCT (NAME, CARD_GAME, CATEGORY, PRICE, STOCK, STATUS)
+VALUES
     ('Scarlet & Violet Booster Pack', 'POKEMON', 'BOOSTER_PACK', 4.99, 30, 'ACTIVE'),
     ('Paldea Evolved Elite Trainer Box', 'POKEMON', 'ELITE_TRAINER_BOX', 49.99, 10, 'ACTIVE'),
     ('Charizard ex Special Collection', 'POKEMON', 'SPECIAL_COLLECTION', 39.99, 8, 'ACTIVE'),
